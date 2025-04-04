@@ -1,0 +1,68 @@
+@use "../foundations/var" as *;
+
+.toc-accordion{
+    @media only screen and (max-width: 1023px){
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+    }
+}
+
+.toc-btn{
+    display: none;
+
+    @media only screen and (max-width: 1023px){
+            display: block !important;
+            position: relative;
+    }
+}
+
+.toc-btn span{
+    @media only screen and (max-width: 1023px){
+        display: block;
+        align-items: center;
+        width: 2.0rem;
+        height: 2.0rem;
+        background-color: #005bac;
+        border-radius: 9999%;
+        
+        &::before{
+            content: "";
+            display: block;
+            background-color: white;
+            width: 60%;
+            height: 2px;
+            position: absolute;
+            top: 45%;
+            left: 20%;
+            transition: all 0.4s ease;
+        }
+        &::after{
+            content: "";
+            display: block;
+            background-color: white;
+            width: 60%;
+            height: 2px;
+            position: absolute;
+            top: 45%;
+            left: 20%;
+            transform: rotate(-90deg);
+            transition: all 0.4s ease;
+        }
+    }
+}
+
+.toc-accordion.active .toc-btn span {
+    &::after{
+        transform: rotate(0deg);
+    }
+}
+
+.toc-list{
+    @media only screen and (max-width: 1023px){
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.2s ease;
+    }
+}
