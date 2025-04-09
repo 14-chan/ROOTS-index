@@ -1,4 +1,4 @@
-=== Post Templator ===
+=== ROOTS-index ===
 Contributors: 14chan
 Tags: cms, indexes, navigation, table of contents, toc
 Requires at least: 6.7.2

@@ -46,7 +46,7 @@ function roots_index_enqueue_scripts() {
     $plugin_url = plugin_dir_url(__FILE__);
 
     // `toc.js` は必ず読み込む
-    wp_enqueue_script('index-script', $plugin_url . 'src/js/modules/toc.js', [], '1.0', true);
+    wp_enqueue_script('index-script', $plugin_url . 'assets/js/roots-index-toc.js', [], '1.0', true);
     wp_localize_script('index-script', 'tocData', [
         'headings' => $headings,
         'label' => isset($options['label']) ? esc_js($options['label']) : 'このページの目次',
@@ -55,17 +55,17 @@ function roots_index_enqueue_scripts() {
 
     // 「最低限のCSSとJavaScriptを使用する」がオンの場合
     if (!empty($options['minimal_css_js'])) {
-        wp_enqueue_script('accordions-script', $plugin_url . 'src/js/modules/accordion.js', [], '1.0', true);
-        wp_enqueue_style('accordions-style', $plugin_url . 'src/scss/modules/_accordion.scss', [], '1.0');
+        wp_enqueue_script('accordions-script', $plugin_url . 'assets/js/roots-index-accordion.js', [], '1.0', true);
+        wp_enqueue_style('accordions-style', $plugin_url . 'assets/css/roots-index-accordion.css', [], '1.0');
     }
 
     // 「テーマのCSSを適用する」がオンの場合は全てのCSSとJSを読み込む
     if (!empty($options['theme_css'])) {
-        wp_enqueue_style('index-style', $plugin_url . 'src/scss/modules/_toc.scss', [], '1.0');
+        wp_enqueue_style('index-style', $plugin_url . 'assets/css/roots-index-toc.css', [], '1.0');
 
         // `minimal_css_js` に関係なく `accordions.js` も必ず読み込む
-        wp_enqueue_script('accordions-script', $plugin_url . 'src/js/modules/accordion.js', [], '1.0', true);
-        wp_enqueue_style('accordions-style', $plugin_url . 'src/scss/modules/_accordion.scss', [], '1.0');
+        wp_enqueue_script('accordions-script', $plugin_url . 'assets/js/roots-index-accordion.js', [], '1.0', true);
+        wp_enqueue_style('accordions-style', $plugin_url . 'assets/css/roots-index-accordion.css', [], '1.0');
     }
 }
 add_action('wp_enqueue_scripts', 'roots_index_enqueue_scripts');
@@ -91,6 +91,7 @@ function roots_index_settings_page() {
             <?php
             settings_fields('roots_index_settings_group'); // 設定を保存するための非表示フィールドを自動出力
             do_settings_sections('roots-index'); // 設定フィールドを表示
+            check_admin_referer('roots_index_settings_group'); // ここで手動で確認
             submit_button();
             ?>
         </form>
@@ -100,7 +101,11 @@ function roots_index_settings_page() {
 
 // 設定の登録
 function roots_index_register_settings() {
-    register_setting('roots_index_settings_group', 'roots_index_settings'); // roots_index_settings_group に roots_index_settings という設定オプションを登録
+    register_setting(
+        'roots_index_settings_group', 
+        'roots_index_settings', // roots_index_settings_group に roots_index_settings という設定オプションを登録
+        'sanitize_roots_index_settings' // サニタイズ関数を追加
+    ); 
 
     add_settings_section( // 新しい設定セクションを追加
         'roots_index_main_section', // セクションID
@@ -172,4 +177,36 @@ function roots_index_label_callback() {
     $label = isset($options['label']) ? esc_attr($options['label']) : 'このページの目次'; // 'このページの目次'をデフォルト
     echo '<input type="text" name="roots_index_settings[label]" value="' . $label . '" class="regular-text">'; // 入力フィールドを作成
     echo '<p class="description">目次の見出しをカスタマイズできます。</p>';
+}
+
+// サニタイズ関数を追加
+function sanitize_roots_index_settings($input) {
+    $sanitized_input = []; // サニタイズ後のデータを入れる配列
+
+    // h1～h6 のチェックボックスのサニタイズ
+    if (isset($input['headings']) && is_array($input['headings'])) {
+        $sanitized_input['headings'] = array_map('sanitize_text_field', $input['headings']);
+    }
+
+    // テーマのCSS適用 (チェックボックス)
+    if (isset($input['theme_css'])) {
+        $sanitized_input['theme_css'] = (bool) $input['theme_css']; // boolean に変換→true（1）または false（0） に変換
+    }
+
+    // 最低限のCSSとJSを使用する (チェックボックス)
+    if (isset($input['minimal_css_js'])) {
+        $sanitized_input['minimal_css_js'] = (bool) $input['minimal_css_js'];
+    }
+
+    // アコーディオンを最初から開いた状態にする (チェックボックス)
+    if (isset($input['accordion_open'])) {
+        $sanitized_input['accordion_open'] = (bool) $input['accordion_open'];
+    }
+
+    // 目次のラベルのサニタイズ (テキスト入力)
+    if (isset($input['label'])) {
+        $sanitized_input['label'] = sanitize_text_field($input['label']);
+    }
+
+    return $sanitized_input; // サニタイズ済みのデータを返す
 }

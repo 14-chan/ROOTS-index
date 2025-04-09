@@ -1,7 +1,11 @@
-"use strict";
 
 document.addEventListener("DOMContentLoaded", () => {
     console.log("目次スクリプトが実行されました");
+
+    if (typeof tocData === "undefined") {
+        console.warn("tocData が未定義のため、スクリプトを終了します");
+        return;
+    }    
 
     const tocArea = document.querySelector("#roots-index-toc");
 
@@ -17,26 +21,42 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const tocList = document.createElement("ul");
-    tocList.classList.add("toc-list");
+    tocList.classList.add("roots-index-toc-list");
 
-    headings.forEach((heading, i) => {
-        const id = `toc-${i + 1}`;
+    let idCounter = 1;
+
+    headings.forEach((heading) => {
+        const id = `toc-${idCounter++}`;
+    
+        // <li>要素と <a> 要素の作成
         const item = document.createElement("li");
-        item.innerHTML = `<a href="#${id}">${heading.text}</a>`;
-        tocList.appendChild(item);
-
-        // 見出しにIDを付与
-        const targetHeading = document.querySelector(`h${heading.level}`);
-        if (targetHeading) targetHeading.id = id;
+        const link = document.createElement("a");
+        link.href = `#${id}`;
+        link.textContent = heading.text;
+    
+        // 見出しにIDを付ける（テキストが一致する最初の未設定要素）
+        const candidates = document.querySelectorAll(`h${heading.level}.wp-block-heading`);
+        for (const el of candidates) {
+            // すでにIDがある or テキストが一致しない場合はスキップ
+            if (el.id || el.textContent.trim() !== heading.text.trim()) continue;
+            el.id = id;
+            break; // 一致した要素にだけ付与したら次へ
+        }
+    
+        // linkをitemに追加
+        item.appendChild(link); // linkをitemに追加
+    
+        // 目次の項目を <ul> に追加
+        tocList.appendChild(item); // itemをtocListに追加
     });
-
+    
     const tocBox = document.createElement("div");
-    tocBox.classList.add("toc-box");
-    tocBox.innerHTML = `<div class='toc-accordion'>${tocData.label}<div class='toc-btn'><span></span></div></div>`;
+    tocBox.classList.add("roots-index-toc-box");
+    tocBox.innerHTML = `<div class='roots-index-toc-accordion'>${tocData.label}<div class='roots-index-toc-btn'><span></span></div></div>`;
     tocBox.appendChild(tocList);
 
     const tocNav = document.createElement("nav");
-    tocNav.classList.add("toc-nav");
+    tocNav.classList.add("roots-index-toc-nav");
     tocNav.id = "tocnav";
     tocNav.appendChild(tocBox);
 
@@ -45,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("目次の挿入完了");
 
     // スムーズスクロール機能を追加
-    document.querySelectorAll(".toc-list a").forEach(link => {
+    document.querySelectorAll(".roots-index-toc-list a").forEach(link => {
         link.addEventListener("click", (e) => {
             e.preventDefault();
             const targetId = link.getAttribute("href").substring(1);
