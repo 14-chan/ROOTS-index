@@ -1,6 +1,9 @@
-@use "../foundations/var" as *;
+/**
+ * @package ROOTS-index
+ * @license GPL-2.0-or-later
+ */
 
-.toc-box{
+ .roots-index-toc-box{
     width: 36.8rem;
     background-color: var(--color-paleGray);
     border-radius: 3.0rem;
@@ -13,7 +16,7 @@
     }
 }
 
-.toc-accordion{
+.roots-index-toc-accordion{
     display: none;
 
     @media only screen and (max-width: 1023px){
@@ -23,11 +26,11 @@
     }
 }
 
-.toc-btn{
+.roots-index-toc-btn{
     display: none;
 }
 
-.toc-box li{
+.roots-index-toc-box li{
     &:not(:nth-child(1)) {
         padding-top: 3.2rem;
     }
@@ -40,7 +43,7 @@
     }
 }
 
-.toc-box a{
+.roots-index-toc-box a{
     text-decoration: none;
 }
 

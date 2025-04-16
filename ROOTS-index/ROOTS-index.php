@@ -104,7 +104,7 @@ function roots_index_register_settings() {
     register_setting(
         'roots_index_settings_group', 
         'roots_index_settings', // roots_index_settings_group に roots_index_settings という設定オプションを登録
-        'sanitize_roots_index_settings' // サニタイズ関数を追加
+        'roots_index_sanitize_settings' // サニタイズ関数を追加
     ); 
 
     add_settings_section( // 新しい設定セクションを追加
@@ -160,7 +160,7 @@ function roots_index_headings_callback() {
 
     foreach ($levels as $level) {
         $checked = in_array($level, $headings) ? 'checked' : ''; // ループしてチェックボックスを作成
-        echo '<label><input type="checkbox" name="roots_index_settings[headings][]" value="' . $level . '" ' . $checked . '> ' . strtoupper($level) . '</label> '; // HTMLを生成
+        echo '<label><input type="checkbox" name="roots_index_settings[headings][]" value="' . esc_attr($level) . '" ' . checked(in_array($level, $headings), true, false) . '> ' . esc_html(strtoupper($level)) . '</label> '; //HTMLを生成
     }
 }
 
@@ -168,7 +168,7 @@ function roots_index_headings_callback() {
 function roots_index_option_checkbox($option_name) {
     $options = get_option('roots_index_settings', []);
     $checked = isset($options[$option_name]) ? 'checked' : ''; // 保存された設定を取得 し、チェックを適用
-    echo '<label><input type="checkbox" name="roots_index_settings[' . $option_name . ']" value="1" ' . $checked . '> ' . ucfirst(str_replace('_', ' ', $option_name)) . '</label>';
+    echo '<label><input type="checkbox" name="roots_index_settings[' . esc_attr($option_name) . ']" value="1" ' . checked(isset($options[$option_name]), true, false) . '> ' . esc_html(ucfirst(str_replace('_', ' ', $option_name))) . '</label>';
 }
 
 // 目次のラベル入力
@@ -180,7 +180,7 @@ function roots_index_label_callback() {
 }
 
 // サニタイズ関数を追加
-function sanitize_roots_index_settings($input) {
+function roots_index_sanitize_settings($input) {
     $sanitized_input = []; // サニタイズ後のデータを入れる配列
 
     // h1～h6 のチェックボックスのサニタイズ

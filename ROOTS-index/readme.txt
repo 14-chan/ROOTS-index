@@ -1,12 +1,12 @@
 === ROOTS-index ===
 Contributors: 14chan
 Tags: cms, indexes, navigation, table of contents, toc
-Requires at least: 6.7.2
-Tested up to: 6.7.2
+Requires at least: 6.7
+Tested up to: 6.8
 Stable tag: 1.0.0
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Requires PHP: 8.2.27
+Requires PHP: 8.2
 
 
 == Description ==
@@ -41,6 +41,24 @@ Requires PHP: 8.2.27
 
 
 == Frequently asked questions ==
+
+= How do I build the plugin assets locally? =
+
+This plugin uses webpack and npm to build the final JavaScript and CSS assets.
+
+Source files are located in the `src/` directory.  
+Compiled assets are located in `assets/js/` and `assets/css/`.
+
+To build the plugin assets locally:
+
+1. Install dependencies:  
+   `npm install`
+
+2. Build assets:  
+   `npm run build`
+
+Alternatively, you can find the source code and build instructions on GitHub:  
+https://github.com/14-chan/ROOTS-index
 
 
 == Screenshots ==
