@@ -1,83 +1,33 @@
+/*
+ * ATTENTION: The "eval" devtool has been used (maybe by default in mode: "development").
+ * This devtool is neither made for production nor for readable output files.
+ * It uses "eval()" calls to create a separate source file in the browser devtools.
+ * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
+ * or disable the default devtool with "devtool: false".
+ * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
+ */
+/******/ (function() { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
 
-document.addEventListener("DOMContentLoaded", () => {
-    console.log("目次スクリプトが実行されました");
+/***/ "./src/js/modules/toc.js":
+/*!*******************************!*\
+  !*** ./src/js/modules/toc.js ***!
+  \*******************************/
+/***/ (function() {
 
-    if (typeof tocData === "undefined") {
-        console.warn("tocData が未定義のため、スクリプトを終了します");
-        return;
-    }    
+eval("/**\n * @package ROOTS-index\n * @license GPL-2.0-or-later\n */\n\n\n\nfunction _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== \"undefined\" && o[Symbol.iterator] || o[\"@@iterator\"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === \"number\") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError(\"Invalid attempt to iterate non-iterable instance.\\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.\"); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it[\"return\"] != null) it[\"return\"](); } finally { if (didErr) throw err; } } }; }\nfunction _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }\nfunction _nonIterableSpread() { throw new TypeError(\"Invalid attempt to spread non-iterable instance.\\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.\"); }\nfunction _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === \"string\") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === \"Object\" && o.constructor) n = o.constructor.name; if (n === \"Map\" || n === \"Set\") return Array.from(o); if (n === \"Arguments\" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }\nfunction _iterableToArray(iter) { if (typeof Symbol !== \"undefined\" && iter[Symbol.iterator] != null || iter[\"@@iterator\"] != null) return Array.from(iter); }\nfunction _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }\nfunction _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }\ndocument.addEventListener(\"DOMContentLoaded\", function () {\n  console.log(\"目次スクリプトが実行されました\");\n  if (typeof tocData === \"undefined\") {\n    console.warn(\"tocData が未定義のため、スクリプトを終了します\");\n    return;\n  }\n  var tocArea = document.querySelector(\"#roots-index-toc\");\n  if (!tocArea) {\n    console.warn(\"目次の挿入場所が見つからないため処理を中断\");\n    return;\n  }\n  var headings = tocData.headings;\n\n  // ここで中身を確認\n  console.log(\"取得したheadingsの内容:\", headings);\n  if (headings.length === 0) {\n    console.warn(\"見出しが見つからないため目次を生成しません\");\n    return;\n  }\n  var tocList = document.createElement(\"ul\");\n  tocList.classList.add(\"roots-index-toc-list\");\n\n  // 最小見出しレベル（例: h2 〜 h4 → 2）\n  var minLevel = Math.min.apply(Math, _toConsumableArray(headings.map(function (h) {\n    return h.level;\n  })));\n  var counters = [];\n  var idCounter = 1;\n  headings.forEach(function (heading) {\n    var level = heading.level;\n    var levelIndex = level - minLevel;\n\n    // 番号生成のためのカウンター制御\n    counters[levelIndex] = (counters[levelIndex] || 0) + 1;\n    counters.length = levelIndex + 1; // 上位階層より下はリセット\n\n    var numberLabel = counters.join(\".\");\n    var id = \"toc-\".concat(idCounter++);\n    var item = document.createElement(\"li\");\n    item.classList.add(\"toc-depth-\".concat(levelIndex));\n    var link = document.createElement(\"a\");\n    link.href = \"#\".concat(id);\n    link.textContent = \"\".concat(numberLabel, \" \").concat(heading.text);\n\n    // 対象見出しにIDを設定\n    var candidates = document.querySelectorAll(\"h\".concat(heading.level, \".wp-block-heading\"));\n    var matched = false;\n    var _iterator = _createForOfIteratorHelper(candidates),\n      _step;\n    try {\n      for (_iterator.s(); !(_step = _iterator.n()).done;) {\n        var el = _step.value;\n        if (!el.id && el.textContent.trim() === heading.text.trim()) {\n          el.id = id;\n          matched = true;\n          break;\n        }\n      }\n    } catch (err) {\n      _iterator.e(err);\n    } finally {\n      _iterator.f();\n    }\n    if (!matched && candidates.length > 0) {\n      candidates[0].id = id; // fallback\n    }\n    item.appendChild(link);\n    tocList.appendChild(item);\n  });\n  var tocBox = document.createElement(\"div\");\n  tocBox.classList.add(\"roots-index-toc-box\");\n  tocBox.innerHTML = \"<div class='roots-index-toc-accordion'>\".concat(tocData.label, \"<div class='roots-index-toc-btn'><span></span></div></div>\");\n  tocBox.appendChild(tocList);\n  var tocNav = document.createElement(\"nav\");\n  tocNav.classList.add(\"roots-index-toc-nav\");\n  tocNav.id = \"tocnav\";\n  tocNav.appendChild(tocBox);\n  tocArea.appendChild(tocNav);\n  console.log(\"目次の挿入完了\");\n\n  // スムーズスクロール機能\n  document.querySelectorAll(\".roots-index-toc-list a\").forEach(function (link) {\n    link.addEventListener(\"click\", function (e) {\n      e.preventDefault();\n      var targetId = link.getAttribute(\"href\").substring(1);\n      var target = document.getElementById(targetId);\n      if (target) {\n        window.scrollTo({\n          top: target.offsetTop - 50,\n          behavior: \"smooth\"\n        });\n      }\n    });\n  });\n  console.log(\"目次スクリプトの適用が完了しました\");\n});\n\n//# sourceURL=webpack://roots-index/./src/js/modules/toc.js?");
 
-    const tocArea = document.querySelector("#roots-index-toc");
+/***/ })
 
-    if (!tocArea) {
-        console.warn("目次の挿入場所が見つからないため処理を中断");
-        return;
-    }
-
-    const headings = tocData.headings;
-    if (headings.length === 0) {
-        console.warn("見出しが見つからないため目次を生成しません");
-        return;
-    }
-
-    const tocList = document.createElement("ul");
-    tocList.classList.add("roots-index-toc-list");
-
-    let idCounter = 1;
-
-    headings.forEach((heading) => {
-        const id = `toc-${idCounter++}`;
-    
-        // <li>要素と <a> 要素の作成
-        const item = document.createElement("li");
-        const link = document.createElement("a");
-        link.href = `#${id}`;
-        link.textContent = heading.text;
-    
-        // 見出しにIDを付ける（テキストが一致する最初の未設定要素）
-        const candidates = document.querySelectorAll(`h${heading.level}.wp-block-heading`);
-        for (const el of candidates) {
-            // すでにIDがある or テキストが一致しない場合はスキップ
-            if (el.id || el.textContent.trim() !== heading.text.trim()) continue;
-            el.id = id;
-            break; // 一致した要素にだけ付与したら次へ
-        }
-    
-        // linkをitemに追加
-        item.appendChild(link); // linkをitemに追加
-    
-        // 目次の項目を <ul> に追加
-        tocList.appendChild(item); // itemをtocListに追加
-    });
-
-    const tocBox = document.createElement("div");
-    tocBox.classList.add("roots-index-toc-box");
-    tocBox.innerHTML = `<div class='roots-index-toc-accordion'>${tocData.label}<div class='roots-index-toc-btn'><span></span></div></div>`;
-    tocBox.appendChild(tocList);
-
-    const tocNav = document.createElement("nav");
-    tocNav.classList.add("roots-index-toc-nav");
-    tocNav.id = "tocnav";
-    tocNav.appendChild(tocBox);
-
-    tocArea.appendChild(tocNav);
-
-    console.log("目次の挿入完了");
-
-    // スムーズスクロール機能を追加
-    document.querySelectorAll(".roots-index-toc-list a").forEach(link => {
-        link.addEventListener("click", (e) => {
-            e.preventDefault();
-            const targetId = link.getAttribute("href").substring(1);
-            const target = document.getElementById(targetId);
-            if (target) {
-                window.scrollTo({
-                    top: target.offsetTop - 50, // 上部に50pxのマージン
-                    behavior: "smooth"
-                });
-            }
-        });
-    });
-
-    console.log("目次スクリプトの適用が完了しました");
-});
+/******/ 	});
+/************************************************************************/
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module can't be inlined because the eval devtool is used.
+/******/ 	var __webpack_exports__ = {};
+/******/ 	__webpack_modules__["./src/js/modules/toc.js"]();
+/******/ 	
+/******/ })()
+;

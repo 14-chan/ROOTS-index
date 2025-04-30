@@ -149,6 +149,10 @@
   --weight-bold: 700;
 }
 
+/**
+ * @package ROOTS-index
+ * @license GPL-2.0-or-later
+ */
 @media only screen and (max-width: 1023px) {
   .toc-accordion {
     display: flex;

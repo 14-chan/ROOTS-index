@@ -18,6 +18,8 @@ const buildDefault = {
     // メインとなるJavaScriptファイル（エントリーポイント）
     entry: {
         bundle : "./src/js/index.js",
+        "roots-index-toc" : "./src/js/modules/toc.js",
+        "roots-index-accordion" : "./src/js/modules/accordion.js",
         "style.css"  : './src/scss/style.scss',
         "editor.css" : "./src/scss/editor.scss",
     },
